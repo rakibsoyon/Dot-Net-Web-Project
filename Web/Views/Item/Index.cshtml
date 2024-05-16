@@ -1,0 +1,97 @@
+﻿@using Domain
+@using Shared
+@using Shared.Models
+
+@model PagedList<ItemViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Items</h1>
+<br />
+<p>
+    <a class="btn btn-outline-primary" asp-action="Create">Create</a>  
+    
+@*     <a class="btn btn-outline-primary " asp-action="GetUplodFormat">Download Format</a> *@
+    <a class="btn btn-outline-primary" asp-action="Upload"> Upload</a>
+</p>
+
+
+
+<table class="table table-bordered table-responsive-sm table-striped table-hover" id="dataTable">
+
+    <thead>
+        <tr>
+            <th>
+                @Html.Label("Name")
+            </th>
+            <th>
+                @Html.Label("Unit")
+            </th>
+            <th>
+                @Html.Label("Quantity")
+            </th>
+            <th>
+                @Html.Label("Category")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ct in Model.Data.Select((value, i) => new { i, value }))
+        {
+
+            var item = ct.value;
+            var index = ct.i;
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Unit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
+                    <a asp-action="ImageUpload" asp-route-id="@item.Id" class="btn btn-outline-secondary">Image Upload</a>
+                    @* <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+}
+
+<a asp-action="Index"
+   asp-route-page="@(Model.Page - 1)"
+   asp-route-PageSize="@(Model.PageSize)"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+
+@for (int i = 1; i <= Model.TotalPages; i++)
+{
+    <a asp-action="Index" asp-route-page="@i" asp-route-PageSize="@(Model.PageSize)" class="btn btn-outline-primary @(Model.Page == i ? "active" : "")">@i</a>
+}
+
+<a asp-action="Index"
+   asp-route-page="@(Model.Page + 1)"
+   asp-route-PageSize="@(Model.PageSize)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
+
+
+

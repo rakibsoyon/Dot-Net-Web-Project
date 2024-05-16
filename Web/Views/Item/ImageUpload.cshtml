@@ -1,0 +1,34 @@
+﻿@using Shared.Models
+
+@model ItemImagesUploadModel
+
+<h4>Upload Image</h4>
+<hr />
+<div class="row">
+
+    @if (ViewBag.Error is not null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @ViewBag.Error
+        </div>
+    }
+</div>
+
+<div class="col-md-4">
+    <form asp-action="ImageUpload" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group mb-2">
+            <label for="fileToUpload" class="control-label">
+                Select File to Upload
+            </label>
+            <input id="files" name="files" type="file" class="form-control" accept=".png, .jpg, .jpeg, .JPEG" required multiple />
+        </div>
+        <div class="mb-2">
+            <button class="btn btn-primary btn-sm">Submit</button>
+        </div>
+    </form>
+
+    <br />
+    <a asp-action="Index">Back to List</a>
+</div>

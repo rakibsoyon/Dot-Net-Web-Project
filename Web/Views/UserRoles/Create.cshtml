@@ -1,0 +1,38 @@
+﻿@using DataAccess
+
+@model ApplicationRole
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <h2> Create Role</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating table-responsive">
+                <input asp-for="Name" class="form-control" aria-required="true" required />
+                <label asp-for="Name"></label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <br />
+
+            <div class="form-floating table-responsive">
+                <input asp-for="Description" class="form-control" aria-required="true" />
+                <label asp-for="Description"></label>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-2">
+                    <button type="submit" class="btn btn-outline-primary">Save</button>
+                </div>
+                <div class="col-4">
+                    <a asp-controller="UserRoles" asp-action="Index" class="btn btn-outline-primary">Back to List</a>
+                </div>
+             </div>
+           
+        </form>
+    </div>
+</div>

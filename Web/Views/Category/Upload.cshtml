@@ -1,0 +1,51 @@
+﻿@* <h4>Upload</h4>
+<hr />
+<div class="row">
+
+    @if (ViewBag.Error is not null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @ViewBag.Error
+        </div>
+    }
+
+    <a asp-action="Index">Back to List</a>
+</div>
+ *@
+
+@using Shared.Models
+@model CategoryUploadModel
+
+<h4>Upload</h4>
+<hr />
+<div class="row">
+
+    @if (ViewBag.Error is not null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @ViewBag.Error
+        </div>
+    }
+</div>
+
+<div class="col-md-4">
+    <form asp-action="Upload" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group mb-2">
+            <label for="fileToUpload" class="control-label">
+                Select File to Upload
+            </label>
+            <input id="file" name="file" type="file" class="form-control" accept=".xls, .xlsx" required />
+        </div>
+        <div class="mb-2">
+            <button class="btn btn-primary btn-sm">Submit</button>
+            <a class="btn btn-outline-primary btn-sm" asp-action="GetUplodFormat">Download Format</a>
+        </div>
+    </form>
+
+    <br />
+
+    <a asp-action="Index">Back to List</a>
+</div>
+

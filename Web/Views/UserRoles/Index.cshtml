@@ -1,0 +1,34 @@
+﻿@using DataAccess
+
+@model IEnumerable<ApplicationRole>
+
+@{
+    ViewData["Title"] = "User Roles";
+}
+
+<h1>Application Roles</h1>
+<br />
+<p>
+    <a asp-action="Create" class="btn btn-outline-primary">Add Role</a>
+</p>
+<table class="table" width="100%">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Id)</th>
+
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+
+            <th>@Html.DisplayNameFor(model => model.Description)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+            </tr>
+        }
+    </tbody>
+</table>

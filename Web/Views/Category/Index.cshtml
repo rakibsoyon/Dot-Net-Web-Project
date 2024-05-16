@@ -1,0 +1,193 @@
+﻿@using Shared.Models
+@using static Web.Utility.Constant
+@model CategoryViewModel
+
+@{
+    Layout = null;
+
+    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+
+    var requestCulture = Context.Features.Get<Microsoft.AspNetCore.Localization.IRequestCultureFeature>();
+    var langFileUrl = string.Empty;
+    if (requestCulture!.RequestCulture.UICulture.Name == "en")
+    {
+        langFileUrl = "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/English.json";
+    }
+    else
+    {
+        langFileUrl = "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json";
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Jquery DataTables - Asp.Net Core Server Side</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/css/dataTables.bootstrap4.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/datatables/css/buttons.dataTables.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Dot Net Web Project</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register User</a>
+                        </li>
+
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            @if (User.IsInRole(Roles.Admin))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="UserRoles" asp-action="Index">Manage Roles</a>
+                                </li>
+
+                               @*  <li class="nav-item">
+                                    <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register User</a>
+                                </li> *@
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="register" asp-area="" asp-controller="Category" asp-action="Index"> Category</a>
+                                </li>
+                            }
+
+
+                            @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.General))
+                            {
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="register" asp-area="" asp-controller="Item" asp-action="Index"> Item </a>
+                                </li>
+
+                            }
+                        }
+
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div>
+        @Html.AntiForgeryToken()
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-center align-content-center">
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="text-center">@Localizer["Asp.Net Core - Jquery DataTables Server Side Multi Column Filtering And Ordering With Pagination And Excel Export"]</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-group mb-3">
+                                    <input type="text" id="txtExternalSearch" class="form-control" placeholder="@Localizer["External Search"]" aria-label="@Localizer["External Search"]" aria-describedby="btnExternalSearch">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="btnExternalSearch">@Localizer["Search"]</button>
+                                        <a class="btn btn-primary" asp-action="Upload"> Upload</a>
+                                        
+                                    </div>
+           
+                                </div>
+                                <jquery-datatables-html-localized id="categoriesList"
+                                                                  class="table table-sm table-bordered table-hover table-striped"
+                                                                  model="@Model"
+                                                                  thead-class="text-center"
+                                                                  enable-searching="true"
+                                                                  search-row-th-class="p-0"
+                                                                  search-input-class="form-control form-control-sm"
+                                                                  search-input-style=""
+                                                                  search-input-placeholder-prefix="Search"
+                                                                  use-property-type-as-input-type="false">
+                                </jquery-datatables-html-localized>
+
+                                <partial name="_Create" model="@(new CategoryViewModel())" />
+                                <div id="editPartial"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           <br />
+
+            <div class="row">     
+                <div class="col-2">
+                    
+                    @* <a class="btn btn-outline-primary" asp-action="Upload"> Upload</a> *@
+                </div>
+                <div class="col-3">
+                   @*  <a class="btn btn-outline-primary" asp-action="Upload"> Upload</a> *@
+                </div>
+                
+                <div class="col-3">
+                    @* <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                        <div class="mb-2">
+                            <label for="fileToUpload" class="form-label">
+                                Select File to Upload
+                            </label>
+                            <input id="file" name="file" type="file" class="form-control" accept=".xls, .xlsx" required />
+                        </div>
+                        <div class="mb-2">
+                            <button class="btn btn-primary btn-sm">Submit</button>
+                            <a class="btn btn-outline-primary btn-sm" asp-action="GetUplodFormat">Download Format</a>
+                        </div>
+                    </form> *@
+                </div>
+
+            </div>
+
+            <br />
+        </div>
+
+    </div>
+
+    <br />
+    <br />
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/momentjs/moment.min.js" asp-append-version="true"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/js/dataTables.buttons.min.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        let langFileUrl = '@langFileUrl';
+        let exportToExcelText = '@Localizer["Export to Excel"]';
+        let createText = '@Localizer["Create"]';
+        let editText = '@Localizer["Edit"]';
+        let deleteText = '@Localizer["Delete"]';
+    </script>
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    <script>
+
+    </script>
+</body>
+</html>
+
+
+
+

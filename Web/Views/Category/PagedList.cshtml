@@ -1,0 +1,75 @@
+﻿@using Domain
+@using Shared
+
+@model PagedList<Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Category</h1>
+<br />
+<p>
+    <a class="btn btn-outline-primary" asp-action="Create">Create</a>
+</p>
+<table class="table table-bordered table-responsive-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.Label("SL")
+            </th>
+            <th>
+                @Html.Label("Name")
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ct in Model.Data.Select((value, i) => new { i, value }))
+        {
+            var item = ct.value;
+            var index = ct.i;
+
+            <tr>
+                <td>
+                    @Html.Label((index+1).ToString())
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{  
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";  
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";  
+    
+}  
+  
+<a asp-action="Index"  
+   asp-route-page="@(Model.Page - 1)"
+   asp-route-PageSize="@(Model.PageSize)"
+   class="btn btn-default @prevDisabled">  
+    Previous  
+</a> 
+
+@for (int i = 1; i <= Model.TotalPages; i++)
+{
+    <a asp-action="Index" asp-route-page="@i" asp-route-PageSize="@(Model.PageSize)" class="btn btn-outline-primary @(Model.Page == i ? "active" : "")">@i</a>
+}
+
+<a asp-action="Index"   
+   asp-route-page="@(Model.Page + 1)" 
+   asp-route-PageSize="@(Model.PageSize)"
+   class="btn btn-default @nextDisabled">  
+    Next
+</a>  
+
+
+
